@@ -1,0 +1,11 @@
+{% extends 'music/base.html' %}
+{% block title %}{{ album }}{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+  <h1>{{ song.name }}</h1>
+</div>
+<div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-numposts="5"></div>
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'music/base.html' %}
+{% block title %}{{ album }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+
+    <div class="row">
+
+        <!-- Left Album Info -->
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="{% url 'music:detail1' album.id %}">
+                        {% if album.logo %}
+                            <img src="{{ album.logo.url }}" class="img-responsive">
+                        {% else %}
+                            <h3>No image to display</h3>
+                        {% endif %}
+                    </a>
+                    <!-- <h1>{{ album.name }} <small>{{ album.genre }}</small></h1> -->
+                    <h1>{{ album.name }}</h1>
+                    <!-- <h2>{{ album.artist }}</h2> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Song Info -->
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" class="active"><a href="{% url 'music:detail1' album.id %}">View All</a></li>
+                <li role="presentation" ><a href="{% url 'music:detail3' album.id %}">View My Questions</a></li>
+                <li role="presentation"><a href="{% url 'music:create_song' album.id %}">Add New Question</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h3>All Questions</h3>
+
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>User</th>
+                            <th>File</th>
+                            <th>Details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for song in album.question_set.all %}
+                            <tr>
+                                <td>{{ song.name }}</td>
+                                <td>{{ song.user.student }}</td>
+                                <td>
+                                    <a target="_blank" href="{{ song.file.url }}">
+                                        <button type="button" class="btn btn-success btn-xs">
+                                            <span class="glyphicon glyphicon-file"></span>&nbsp; File
+                                        </button>
+                                    </a>
+                                </td>
+                                <td><a href="{% url 'music:detail2' song.id %}" class="btn btn-primary btn-sm" role="button">View</a>
+                                </td>
+                                <td>
+                                    <form action="{% url 'music:delete_song' album.id song.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="song_id" value="{{ song.id }}" />
+                                        <!-- <button type="submit" class="btn btn-danger btn-xs">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

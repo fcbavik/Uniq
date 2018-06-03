@@ -1,0 +1,90 @@
+{% extends 'music/base.html' %}
+<!-- {% block albums_active %}active{% endblock %} -->
+
+{% block body %}
+<div class="albums-container container-fluid">
+
+    <!-- Albums -->
+    <div class="row">
+        <div class="col-sm-12">
+          <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'music:forum' %}">
+              <div class="form-group">
+                  <input type="text" class="form-control" name="q1" value="{{ request.GET.q1 }}">
+              </div>
+              <button type="submit" class="btn btn-default">Search</button>
+          </form>
+        </div>
+        {% if albums %}
+            {% for album in albums %}
+                <div class="col-sm-4 col-lg-2">
+                    <div class="thumbnail">
+                        <a href="{% url 'music:detail1' album.id %}">
+                            <img src="{{ album.logo.url }}" class="img-responsive">
+                        </a>
+                        <div class="caption">
+                            <h2>{{ album.name }}</h2>
+                            <!-- <h4>{{ album.artist }}</h4> -->
+
+                            <!-- View Details -->
+                            <a href="{% url 'music:detail1' album.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
+
+                        </div>
+                    </div>
+                </div>
+                {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- If user searches and there are songs -->
+    {% if songs %}
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Questions</h3>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Question</th>
+                                    <th>User</th>
+                                    <!-- <th>File</th> -->
+                                    <th>Details</th>
+                                    <th>Forum</th>
+                                    <!-- <th>Favorite</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for song in songs %}
+                                    <tr>
+                                        <td>{{ song.name }}</td>
+                                        <td>{{ song.user }}</td>
+                                        <!-- <td>{{ song.forum.artist }}</td> -->
+                                        <!-- <td>
+                                            <a target="_blank" href="{{ song.file.url }}">
+                                                <button type="button" class="btn btn-success btn-xs">
+                                                    <span class="glyphicon glyphicon-file"></span>&nbsp; View
+                                                </button>
+                                            </a>
+                                        </td> -->
+                                        <td><a href="{% url 'music:detail2' song.id %}" class="btn btn-primary btn-sm" role="button">View</a>
+                                        <td>
+                                            <a href="{% url 'music:detail1' song.forum.id %}">
+                                                <img src="{{ song.forum.logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                                            </a>
+                                            <a href="{% url 'music:detail1' song.forum.id %}">{{ song.forum.name }}</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
